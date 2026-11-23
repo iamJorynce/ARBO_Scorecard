@@ -31,7 +31,7 @@ input[type=text],input[type=date]{width:100%;padding:12px;font-size:16px;border:
 #bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;align-items:center;justify-content:center}
 #bar span{font-weight:600}#dl{padding:12px 18px;font-size:16px;font-weight:700;border:0;border-radius:10px;background:var(--g);color:#fff}
 @media(prefers-color-scheme:dark){#sh{color:#000}}
-#bar{flex-wrap:wrap}#sh{padding:12px 18px;font-size:16px;font-weight:700;border:0;border-radius:10px;background:var(--g);color:#fff}.note{background:var(--gl);border-left:4px solid var(--g);border-radius:8px;padding:10px 12px;font-size:14px;margin:10px 0}.card.bad{border:2px solid var(--r)}#iab{background:#fff3cd;color:#4a3500;border:2px solid #b26a00;border-radius:12px;padding:12px;margin:10px 0;font-size:15px}#msg{text-align:center;color:var(--mut);font-size:14px;min-height:20px}
+#bar{flex-wrap:wrap}#sh{padding:12px 18px;font-size:16px;font-weight:700;border:0;border-radius:10px;background:var(--g);color:#fff}.note{background:var(--gl);border-left:4px solid var(--g);border-radius:8px;padding:10px 12px;font-size:14px;margin:10px 0}.card.bad{border:2px solid var(--r)}#iab{background:#fff3cd;color:#4a3500;border:2px solid #b26a00;border-radius:12px;padding:12px;margin:10px 0;font-size:15px}#rd button,#rd a{display:inline-block;margin:8px 8px 0 0;padding:12px 16px;font-size:16px;font-weight:700;border-radius:10px;border:2px solid var(--g);background:var(--card);color:var(--g);text-decoration:none}#msg{text-align:center;color:var(--mut);font-size:14px;min-height:20px}
 </style></head><body><main>
 <div id="iab" hidden><b>Pahimangno:</b> Gi-abli nimo kini sulod sa Messenger o Facebook, ug dili mugana ang pagpadala sa PDF dinhi. I-tap ang tulo ka tuldok (⋯) o ang <b>Open in browser</b> / <b>Open in Chrome</b> / <b>Open in Safari</b>, ug ablihi sa browser.</div>
 <h1>Checklist sa Dokumento sa Scorecard</h1>
@@ -43,7 +43,7 @@ input[type=text],input[type=date]{width:100%;padding:12px;font-size:16px;border:
 <label>Ngalan ug posisyon sa nag-fill up</label><input type="text" id="f3">
 </div>
 <div class="note"><b>Unsaon:</b> Sa matag dokumento, i-tap ang <b>Naa</b>, <b>Wala</b>, o <b>Outdated</b>. Dayon i-tap ang <b>Kuhaa og litrato</b> o <b>Pilia sa gallery</b>.<br><b>Pwede mag-upload og daghang litrato</b> kada dokumento (pananglitan matag pahina). <b>Siguroha nga klaro ang litrato</b>: maayo ang suga, patag ang papel, ug mabasa ang tanang sulat, kay i-print kini.<br>Kinahanglan <b>masabtan ang tanang dokumento</b> ug mapuno ang impormasyon sa taas sa dili pa makapadala. Kon human na, i-tap ang <b>Ipadala ang PDF</b> sa ubos.</div>
-<div id="list"></div><p id="msg"></p>
+<div id="list"></div><div id="rd" class="note" hidden><span id="rt"></span><br><button id="s2">Ipadala</button><a id="sv">I-save ang PDF</a></div><p id="msg"></p>
 </main>
 <div id="bar"><span id="cnt"></span><button id="sh">Ipadala ang PDF</button></div>
 <script>
@@ -85,7 +85,13 @@ let k=0;D.forEach(([t,it])=>{chk(20);d.setFont("helvetica","bold");d.setFontSize
 it.forEach(x=>{const a=d.setFontSize(10).splitTextToSize((k+1)+". "+x,W),imgs=PH[k]||[];chk(a.length*5+12+(imgs.length?Math.min(200,W*PH.m[imgs[0]][1]/PH.m[imgs[0]][0]):0));
 d.setFont("helvetica","bold");d.text(a,L,y);y+=a.length*5;d.setFont("helvetica","normal");d.text("Kahimtang: "+(ST[k]||"Wala pa napili"),L,y);y+=6;
 imgs.forEach(u=>{const[w,h2]=PH.m[u];let iw=W,ih=iw*h2/w;if(ih>200){ih=200;iw=ih*w/h2}if(y+ih>285){d.addPage();y=18;d.setFont("helvetica","normal");d.setFontSize(9);d.text("(tuloy) "+(k+1)+". "+x.slice(0,70),L,y);y+=6;d.setFontSize(10)}d.addImage(u,"JPEG",L+(W-iw)/2,y,iw,ih);y+=ih+5});y+=3;k++});y+=2});
-const fn="Checklist_Scorecard_"+($("#f0").value.trim().replace(/[^\w]+/g,"_")||"ARBO")+".pdf";const fl=new File([d.output("blob")],fn,{type:"application/pdf"});if(navigator.canShare&&navigator.canShare({files:[fl]}))await navigator.share({files:[fl],title:fn});else d.save(fn);m.textContent=""}
-catch(er){m.textContent=er&&(er.code==="declined"||er.name==="AbortError")?"":"Wala ma-send. Sulayi usab, o ablihi sa Chrome o Safari."}};
+const fn="Checklist_Scorecard_"+($("#f0").value.trim().replace(/[^\w]+/g,"_")||"ARBO")+".pdf",bl=d.output("blob"),fl=new File([bl],fn,{type:"application/pdf"});window.PF={fl,bl,fn};m.textContent="";
+let ok=false;const can=!!(navigator.canShare&&navigator.canShare({files:[fl]}));
+try{if(can){await navigator.share({files:[fl],title:fn});ok=true}}catch(e2){if(e2&&e2.name==="AbortError")ok=true}
+if(!ok){const a=$("#sv");a.href=URL.createObjectURL(bl);a.download=fn;$("#s2").hidden=!can;const iab=!$("#iab").hidden;
+$("#rt").innerHTML=iab?"<b>Dili mugana ang pagpadala sulod sa Messenger.</b> Ablihi ang link sa Chrome o Safari, ug sulayi usab.":can?"<b>Andam na ang PDF.</b> I-tap ang <b>Ipadala</b> aron mopili kon kinsa ang padaluan (Messenger, Viber, email).":"<b>Na-save na ang PDF</b> sa imong device (tan-awa ang Downloads). Ipadala kini pinaagi sa Messenger, Viber, o email. Kon wala ma-save, i-tap ang <b>I-save ang PDF</b>.";
+$("#rd").hidden=false;if(!can&&!iab)a.click();$("#rd").scrollIntoView({block:"center"})}}
+catch(er){m.textContent="Wala ma-send ("+(er&&er.name||"error")+"). Sulayi usab, o ablihi sa Chrome o Safari."}};
+$("#s2").onclick=()=>(navigator.share?navigator.share({files:[PF.fl],title:PF.fn}):Promise.reject({name:"x"})).catch(e=>{if(e.name!=="AbortError")alert("Dili mugana ang pagpadala dinhi. Pindota ang I-save sa telepono, o ablihi ang link sa Chrome.")});
 $("#sh").onclick=go;
 </script></body></html>
