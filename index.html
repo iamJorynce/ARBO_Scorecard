@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ceb"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Checklist sa Dokumento sa Scorecard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f8f4;--card:#fff;--tx:#1c2a1f;--mut:#667;--bd:#cfd8cc;--g:#1e7b34;--r:#c62828;--y:#b26a00;--gl:#e6f4e8}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121712;--card:#1b231c;--tx:#e8f0e8;--mut:#9aa;--bd:#33403a;--g:#5fcf7a;--r:#ff8a80;--y:#ffc058;--gl:#1f3023}}
+:root[data-theme=dark]{--bg:#121712;--card:#1b231c;--tx:#e8f0e8;--mut:#9aa;--bd:#33403a;--g:#5fcf7a;--r:#ff8a80;--y:#ffc058;--gl:#1f3023}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,Arial,sans-serif}
+main{max-width:640px;margin:0 auto;padding:12px 12px 90px}
+h1{font-size:20px;margin:8px 0 2px;color:var(--g)}h2{font-size:17px;margin:24px 0 8px;color:var(--g);border-bottom:2px solid var(--g);padding-bottom:4px}
+.sub{color:var(--mut);font-size:14px;margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:10px}
+.card.ok{border-color:var(--g)}
+label{display:block;font-size:14px;font-weight:600;margin-top:8px}
+input[type=text],input[type=date]{width:100%;padding:12px;font-size:16px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}
+.nm{font-weight:600;margin-bottom:10px}
+.row{display:flex;gap:6px}
+.row button{flex:1;padding:12px 4px;font-size:15px;font-weight:600;border:2px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx)}
+.row button.on[data-s=Naa]{background:var(--g);border-color:var(--g);color:#fff}
+.row button.on[data-s=Wala]{background:var(--r);border-color:var(--r);color:#000}
+.row button.on[data-s=Outdated]{background:var(--y);border-color:var(--y);color:#000}
+.ph{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.add{display:inline-block;padding:10px 14px;border:2px dashed var(--g);color:var(--g);border-radius:10px;font-weight:600;font-size:15px}
+.add input{display:none}.add.alt{border-style:solid;border-color:var(--bd);color:var(--mut);font-weight:500}
+.th{position:relative}.th img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--bd);display:block}
+.th b{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--r);color:#000;text-align:center;line-height:22px;font-size:14px}
+#bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;align-items:center;justify-content:center}
+#bar span{font-weight:600}#dl{padding:12px 18px;font-size:16px;font-weight:700;border:0;border-radius:10px;background:var(--g);color:#fff}
+@media(prefers-color-scheme:dark){#sh{color:#000}}
+#bar{flex-wrap:wrap}#sh{padding:12px 18px;font-size:16px;font-weight:700;border:0;border-radius:10px;background:var(--g);color:#fff}.note{background:var(--gl);border-left:4px solid var(--g);border-radius:8px;padding:10px 12px;font-size:14px;margin:10px 0}.card.bad{border:2px solid var(--r)}#iab{background:#fff3cd;color:#4a3500;border:2px solid #b26a00;border-radius:12px;padding:12px;margin:10px 0;font-size:15px}#msg{text-align:center;color:var(--mut);font-size:14px;min-height:20px}
+</style></head><body><main>
+<div id="iab" hidden><b>Pahimangno:</b> Gi-abli nimo kini sulod sa Messenger o Facebook, ug dili mugana ang pagpadala sa PDF dinhi. I-tap ang tulo ka tuldok (⋯) o ang <b>Open in browser</b> / <b>Open in Chrome</b> / <b>Open in Safari</b>, ug ablihi sa browser.</div>
+<h1>Checklist sa Dokumento sa Scorecard</h1>
+<p class="sub">Department of Agrarian Reform, Asuncion, Davao del Norte</p>
+<div class="card">
+<label>Ngalan sa organisasyon</label><input type="text" id="f0">
+<label>Lugar</label><input type="text" id="f1">
+<label>Petsa sa pag-assess</label><input type="date" id="f2">
+<label>Ngalan ug posisyon sa nag-fill up</label><input type="text" id="f3">
+</div>
+<div class="note"><b>Unsaon:</b> Sa matag dokumento, i-tap ang <b>Naa</b>, <b>Wala</b>, o <b>Outdated</b>. Dayon i-tap ang <b>Kuhaa og litrato</b> o <b>Pilia sa gallery</b>.<br><b>Pwede mag-upload og daghang litrato</b> kada dokumento (pananglitan matag pahina). <b>Siguroha nga klaro ang litrato</b>: maayo ang suga, patag ang papel, ug mabasa ang tanang sulat, kay i-print kini.<br>Kinahanglan <b>masabtan ang tanang dokumento</b> ug mapuno ang impormasyon sa taas sa dili pa makapadala. Kon human na, i-tap ang <b>Ipadala ang PDF</b> sa ubos.</div>
+<div id="list"></div><p id="msg"></p>
+</main>
+<div id="bar"><span id="cnt"></span><button id="sh">Ipadala ang PDF</button></div>
+<script>
+const D=[
+["1. Pagdumala ug Pagpangulo",["Pagrehistro sa Securities and Exchange Commission o sa Cooperative Development Authority","Articles of Incorporation o Articles of Cooperation","By-Laws","Certificate of Compliance gikan sa Cooperative Development Authority","Board Resolution sa organizational structure","Minutes sa mga miting sa Board of Directors o Board of Trustees (kada bulan)","Minutes sa mga miting sa Core Management Team (kada bulan)","Minutes sa mga miting sa mga Committee (kada bulan)","Minutes sa General Assembly","Strategic Plan (3 hangtod 5 ka tuig)","Operational Plan (1 ka tuig) ug Business Plan","Sustainability Plan ug Succession Plan","Board Resolution sa pag-aprobar sa mga plano, ug minutes sa pag-update niini","Manual sa Policies, Systems and Procedures (naka-print)","Board Resolution sa pag-aprobar sa Manual sa Policies, Systems and Procedures"]],
+["2. Pagpamaligya sa Programa ug Produkto",["Farm plan ug budget sa mga miyembro (individual ug consolidated)","Board Resolution o minutes nga nag-aprobar sa farm plans ug budget","Supply commitment plan, kauban ang minutes","Marketing contract nga aprobado sa board, kauban ang staff work plan ug minutes sa miting"]],
+["3. Programa sa Pautang",["Operations and Lending Manuals (aprobado sa board, naka-print)","Board Resolution ug minutes sa pag-aprobar sa Operations and Lending Manuals"]],
+["4. Laing Kita sa Negosyo",["Board Resolution ug minutes nga naghulagway sa mga produkto ug serbisyo","Resibo o transaction records sa gibaligya nga produkto o serbisyo","Ebidensya sa aktuwal nga operasyon (makina, libro sa transaksyon)","Listahan sa sub-borrowers ug ilang loan applications, kauban ang Board Resolution"]],
+["5. Mga Tawo sa Organisasyon",["Certificates sa mandatory trainings (Cooperative Development Authority Memorandum Circular 2015-09)","Records sa pag-hire, contracts, ug listahan sa personnel","Board Resolution sa positions, sweldo, ug structure","Human Resources Manual","Records sa Manager, Bookkeeper, ug Treasurer o Cashier"]],
+["6. Panalapi ug Budget",["Audited Financial Statements sa labing menos 3 ka tuig, naselyohan sa Bureau of Internal Revenue","Financial Analysis and Reports nga gipresentar sa board","Policy on Financial Systems"]],
+["7. Pagbantay ug Pagtimbang-timbang",["Management Information System (computerized o manual), uban ang ebidensya","Membership Profiles","Loan and Repayment Profiles sa mga miyembro","Resulta ug certificate sa Enhanced Cooperative Accreditation Criteria o Risk Asset Acceptance Criteria"]],
+["8. Mga Kinahanglanon sa Balaod",["Certificate of Tax Exemption gikan sa Bureau of Internal Revenue","Tax Identification Number sa organisasyon ug sa mga opisyal","Income Tax Return sa organisasyon ug sa mga empleyado sa miaging tuig","Karon nga Mayor’s Permit o Business Permit","Compliance sa Social Security System (numero o certificate)","Compliance sa Philippine Health Insurance Corporation (numero o certificate)","Compliance sa Home Development Mutual Fund o Pag-IBIG (numero o certificate)","Compliance sa Department of Labor and Employment","License to Operate gikan sa Food and Drug Administration (kon naa sa food processing)","Environmental Compliance Certificate gikan sa Department of Environment and Natural Resources (kon makaapekto ang proyekto sa kalikopan)"]]];
+const $=s=>document.querySelector(s),ST={},PH={},F=["f0","f1","f2","f3"];
+let n=0,h="";
+D.forEach(([t,it])=>{h+=`<h2>${t}</h2>`;it.forEach(x=>{h+=`<div class="card" id="c${n}"><div class="nm">${n+1}. ${x}</div><div class="row">${["Naa","Wala","Outdated"].map(s=>`<button data-i="${n}" data-s="${s}">${s}</button>`).join("")}</div><div class="ph" id="p${n}"><label class="add">Kuhaa og litrato<input type="file" accept="image/*" capture="environment" data-i="${n}"></label><label class="add alt">Pilia sa gallery<input type="file" accept="image/*" multiple data-i="${n}"></label></div></div>`;n++})});
+$("#list").innerHTML=h;
+try{const s=JSON.parse(localStorage.getItem("sc")||"{}");Object.assign(ST,s.st||{});(s.f||[]).forEach((v,i)=>$("#"+F[i]).value=v||"")}catch(e){}
+function save(){try{localStorage.setItem("sc",JSON.stringify({st:ST,f:F.map(i=>$("#"+i).value)}))}catch(e){}}
+function paint(i){const c=$("#c"+i);c.classList.toggle("ok",!!ST[i]);if(ST[i])c.classList.remove("bad");c.querySelectorAll(".row button").forEach(b=>b.classList.toggle("on",b.dataset.s===ST[i]));
+const p=$("#p"+i);p.querySelectorAll(".th").forEach(e=>e.remove());(PH[i]||[]).forEach((u,k)=>{const d=document.createElement("div");d.className="th";d.innerHTML=`<img src="${u}" alt=""><b data-i="${i}" data-k="${k}">×</b>`;p.appendChild(d)});
+$("#cnt").textContent=Object.keys(ST).length+" / "+n+" nahuman"}
+for(let i=0;i<n;i++)paint(i);
+document.addEventListener("click",e=>{const t=e.target;if(t.matches(".row button")){const i=t.dataset.i;ST[i]=ST[i]===t.dataset.s?undefined:t.dataset.s;if(!ST[i])delete ST[i];save();paint(i)}
+if(t.matches(".th b")){PH[t.dataset.i].splice(+t.dataset.k,1);paint(t.dataset.i)}});
+document.addEventListener("input",e=>{if(e.target.id&&F.includes(e.target.id))save()});
+const rs=f=>new Promise(r=>{const im=new Image,u=URL.createObjectURL(f);im.onload=()=>{const m=1800,k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);r({u:c.toDataURL("image/jpeg",.85),w:c.width,h:c.height})};im.onerror=()=>r(null);im.src=u});
+document.addEventListener("change",async e=>{const t=e.target;if(t.type!=="file")return;const i=t.dataset.i;for(const f of t.files){const r=await rs(f);if(r){(PH[i]=PH[i]||[]).push(r.u);(PH.m=PH.m||{})[r.u]=[r.w,r.h]}}t.value="";paint(i)});
+if(/FBAN|FBAV|FB_IAB|FBIOS|Messenger|Instagram|Line\//i.test(navigator.userAgent))$("#iab").hidden=false;
+const go=async()=>{const m=$("#msg");m.textContent="";const miss=[];for(let i=0;i<n;i++)if(!ST[i])miss.push(i);const nf=F.filter(i=>!$("#"+i).value.trim());document.querySelectorAll(".card").forEach(c=>c.classList.remove("bad"));
+if(nf.length||miss.length){miss.forEach(i=>$("#c"+i).classList.add("bad"));(nf.length?$("#"+nf[0]):$("#c"+miss[0])).scrollIntoView({behavior:"smooth",block:"center"});alert((nf.length?"Kompletuha una ang impormasyon sa taas. ":"")+(miss.length?"Naa pay "+miss.length+" ka dokumento nga wala napili (Naa, Wala, o Outdated). Ang pula nga kahon ang wala pa nahuman.":""));return}
+m.textContent="Gihimo ang PDF...";
+try{
+const {jsPDF}=window.jspdf,d=new jsPDF({unit:"mm",format:"a4"}),L=15,W=180;let y=18;
+const chk=H=>{if(y+H>285){d.addPage();y=18}};
+d.setFont("helvetica","bold");d.setFontSize(15);d.text("CHECKLIST SA MGA DOKUMENTO SA SCORECARD",L,y);y+=7;
+d.setFontSize(10);d.setFont("helvetica","normal");d.text("Department of Agrarian Reform, Asuncion, Davao del Norte",L,y);y+=7;
+["Organisasyon","Lugar","Petsa","Nag-fill up"].forEach((l,i)=>{d.text(l+": "+($("#"+F[i]).value||"-"),L,y);y+=5.5});y+=3;
+let k=0;D.forEach(([t,it])=>{chk(20);d.setFont("helvetica","bold");d.setFontSize(12);d.text(t,L,y);y+=7;
+it.forEach(x=>{const a=d.setFontSize(10).splitTextToSize((k+1)+". "+x,W),imgs=PH[k]||[];chk(a.length*5+12+(imgs.length?Math.min(200,W*PH.m[imgs[0]][1]/PH.m[imgs[0]][0]):0));
+d.setFont("helvetica","bold");d.text(a,L,y);y+=a.length*5;d.setFont("helvetica","normal");d.text("Kahimtang: "+(ST[k]||"Wala pa napili"),L,y);y+=6;
+imgs.forEach(u=>{const[w,h2]=PH.m[u];let iw=W,ih=iw*h2/w;if(ih>200){ih=200;iw=ih*w/h2}if(y+ih>285){d.addPage();y=18;d.setFont("helvetica","normal");d.setFontSize(9);d.text("(tuloy) "+(k+1)+". "+x.slice(0,70),L,y);y+=6;d.setFontSize(10)}d.addImage(u,"JPEG",L+(W-iw)/2,y,iw,ih);y+=ih+5});y+=3;k++});y+=2});
+const fn="Checklist_Scorecard_"+($("#f0").value.trim().replace(/[^\w]+/g,"_")||"ARBO")+".pdf";const fl=new File([d.output("blob")],fn,{type:"application/pdf"});if(navigator.canShare&&navigator.canShare({files:[fl]}))await navigator.share({files:[fl],title:fn});else d.save(fn);m.textContent=""}
+catch(er){m.textContent=er&&(er.code==="declined"||er.name==="AbortError")?"":"Wala ma-send. Sulayi usab, o ablihi sa Chrome o Safari."}};
+$("#sh").onclick=go;
+</script></body></html>
